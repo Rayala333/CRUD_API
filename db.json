@@ -1,0 +1,18 @@
+{
+  "userdata": [
+    {
+      "username": "prasad",
+      "password": "1234",
+      "email": "rayalaprasad.369@gmail.com",
+      "phonenumber": "123456",
+      "id": 1
+    },
+    {
+      "username": "Prasad",
+      "password": "",
+      "email": "",
+      "phonenumber": "",
+      "id": 2
+    }
+  ]
+}

@@ -1,18 +1,25 @@
 {
   "userdata": [
     {
-      "username": "prasad",
-      "password": "1234",
-      "email": "rayalaprasad.369@gmail.com",
-      "phonenumber": "123456",
+      "username": "Prasad.R",
+      "password": "prasad",
+      "email": "prasad.rayala@hcl.com",
+      "phonenumber": "9848032199",
       "id": 1
     },
     {
-      "username": "Prasad",
-      "password": "",
-      "email": "",
-      "phonenumber": "",
+      "username": "prasadoooo",
+      "password": "98675433",
+      "email": "rayalaprasad.369@gmail.com",
+      "phonenumber": "12346",
       "id": 2
+    },
+    {
+      "username": "prasad",
+      "password": "Nani",
+      "email": "rayalaprasad.369@gmail.com",
+      "phonenumber": "12346",
+      "id": 3
     }
   ]
 }

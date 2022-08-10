@@ -9,62 +9,92 @@ const Login = () => {
         email:"",
         phonenumber:""
     })
-    const [data,setData]=useState('')
   
-    // console.log(data,"data")
-
-    const [edite,setEdite]=useState(null)
-
+    const [data,setData]=useState('')
+    const [id , setId] = useState(null)
+    const [update,setUpdate] = useState(false)
+  
     const changeHandler = (e)=>{
         setState({...state,[e.target.name]:e.target.value})
     }
-    const fatchData = async()=>{
-        const finalData = await axios.get(`http://localhost:5000/userdata`)
-    
-        const newdata = finalData.data
-        // console.log(newdata,"newdata")
-        if(newdata){
-            setData(newdata)
-        }else{
-            setData([])
-        }
+
+    const getdata = async()=>{
+      const mydata = await axios.get(`http://localhost:5000/userdata`)
+       setData(mydata.data)
     }
-    const submitHandler =  (e)=>{
+    
+    const submitHandler = async (e)=>{
                 e.preventDefault();
-                if(!state.username && !data.password && !data.email && !data.phonenumber){
+                try{
+                  if(!state.username && !state.password, !state.email, !state.phonenumber){
                     alert("No Date")
-                }
-                else{ 
-                    const mydaat = axios.post('http://localhost:5000/userdata',state)
-                    // setData([...data,state])
-                }
-                
+                  }else if(id){
+
+                    await axios.put(`http://localhost:5000/userdata/${id}`,state)
+                    getdata()
+                    setState({
+                      username:"",
+                      password:"",
+                      email:"",
+                      phonenumber:""
+                    })
+                    setId(null)
+                    setUpdate((pre)=>!pre)
+                    // data.map((e)=>{
+                    //   if(e.id===id){
+                    //    console.log(state)
+                    //    try{
+                    //     axios.put(`http://localhost:5000/userdata/${id}`,state)
+                    //    }catch(err){console.log(err.message)}
+                    
+                    //   }else{
+                    //     alert("Not Update")
+                    //   }
+                    // })
+                  }
+                  else{
+                    await axios.post(`http://localhost:5000/userdata`,state)
+                    getdata()
+                    setState({
+                      username:"",
+                      password:"",
+                      email:"",
+                      phonenumber:""
+                    })
+                  }
+                }catch(err){
+                   console.log(err.message)
+                  }
+  
+    }
+
+    const deleteHandler = async(id)=>{
+         await axios.delete(`http://localhost:5000/userdata/${id}`)
+         getdata()
+    }
+
+    const editHandler = async(id)=>{
+     const Edit =  data.find((e)=>{
+        return e.id === id
+      })
+        setState({
+          username:Edit.username,
+          password:Edit.password,
+          email:Edit.email,
+          phonenumber:Edit.phonenumber
+        })
+
+        setId(id)
+        setUpdate((pre)=>!pre)
+
+        // await axios.put(`http://localhost:5000/userdata/${id}`,{"state":{"username":state.username}})
+        // getdata()
     }
     useEffect(()=>{
-        
-            fatchData()
-        
+        getdata()
     },[])
-
-    const deleteHandler = (id)=>{
-
-        const deleData =  axios.delete(`http://localhost:5000/userdata/${id}`)  
-    }
-
-
-    const EditeHandler = (id)=>{
-            let EditId = data.find((element)=>{
-                return element.id===id
-            })
-            console.log(EditId.username)
-            setState({
-                username:EditId.username,
-                password:EditId.password,
-                email:EditId.email,
-                phonenumber:EditId.phonenumber
-            })
-            setEdite({id})
-    }
+    
+   
   return (
         <React.Fragment>
             <form
@@ -102,7 +132,7 @@ const Login = () => {
                                         value={state.phonenumber}
                                         onChange={changeHandler} sx={{margin:"1rem"}}/>
                 
-                <button>Submit</button>
+              {!update? <button>Submit</button> : <button>Update</button>}  
         
         </form>
         {data.length <= 0 ? <h1>Enter User Details</h1>:
@@ -118,23 +148,23 @@ const Login = () => {
           </tr>
         </thead>
         <tbody>
-        {data.isLoding ? <h1>Loding...</h1>:
+        {
           data.map((user,index)=>(
             <tr key={index}>
-              {/* <td>{index}</td> */}
+              
               <td>{user.username}</td>
               <td>{user.password}</td>
               <td>{user.email}</td>
               <td>{user.phonenumber}</td>
-              <td onClick={()=>EditeHandler(user.id)}>Edit</td>
-              <td onClick={()=>{deleteHandler(user.id)}}>Delete</td>
+              <td onClick={()=>editHandler(user.id)}>Edit</td>
+              <td onClick={()=>deleteHandler(user.id)}>Delete</td>
             </tr>
           ))
         }
-        {/* <tr><td colSpan={7}>
-        <button onClick={()=>setLocal([])} className="button" >RemoveAll</button></td></tr> */}
+       
         </tbody>
-      </table>}
+      </table>
+      }
 
         </React.Fragment>
   )
